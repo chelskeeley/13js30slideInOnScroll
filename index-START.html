@@ -56,7 +56,36 @@
         timeout = setTimeout(later, wait);
         if (callNow) func.apply(context, args);
       };
+    };
+
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide(e){
+      // console.log(e);
+      sliderImages.forEach(sliderImage => {
+        //scrollY tells us the pixel value of where the top of the window is, if we add the inner height, it gives us the pixel value at the bottom of the window
+        //slideInAt is halfway through the image
+        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+
+        //tells us the top of the image, how far is is from the very top of the document
+        //imageBottom is the bottom of the image
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        if(isHalfShown && isNotScrolledPast){
+          sliderImage.classList.add('active')
+        } else {
+          sliderImage.classList.remove('active')
+        }
+
+
+      });
     }
+    //when we run this, this will fire 50 times scrolling from top to bottom...this is too much!
+    //if we wrap it in debounce (see above) then it will only fire checkslide function once every so many seconds
+    window.addEventListener('scroll', debounce(checkSlide));
+
+
 
   </script>
 
